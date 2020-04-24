@@ -6,9 +6,18 @@ public class Produit {
     private float Prix_vente;
     private String Type_produit;
     private String Marque;
+    private int qte;
 
     public int getID_produit() {
         return ID_produit;
+    }
+
+    public int getQte() {
+        return qte;
+    }
+
+    public void setQte(int qte) {
+        this.qte = qte;
     }
 
     public void setID_produit(int iD_produit) {
@@ -56,13 +65,14 @@ public class Produit {
     }
 
     public Produit(int iD_produit, String nom_produit, float prix_achat, float prix_vente, String type_produit,
-            String marque) {
+            String marque, int qte) {
         this.ID_produit = iD_produit;
         this.Nom_produit = nom_produit;
         this.Prix_achat = prix_achat;
         this.Prix_vente = prix_vente;
         this.Type_produit = type_produit;
         this.Marque = marque;
+        this.qte = qte;
     }
 
     public void AfficheDetailsProduit() {
@@ -70,13 +80,14 @@ public class Produit {
         System.out.println("ID: " + this.ID_produit);
         System.out.println("Marque: " + this.Marque);
         System.out.println("Type: " + this.Type_produit);
-        System.out.println("Prix d'achat: " + this.Prix_achat);
-        System.out.println("Prix de vente: " + this.Prix_vente);
+        System.out.println("Prix d'achat: " + this.Prix_achat + " dt.");
+        System.out.println("Prix de vente: " + this.Prix_vente + " dt.");
+        System.out.println("Quantitée: " + this.qte);
     }
 
     public void AfficheProduitTicket() {
-        System.out.println(
-                "Produit: " + this.Nom_produit + " | Code: " + this.ID_produit + " | Prix: " + this.Prix_vente);
+        System.out.println("Produit: " + this.Nom_produit + " | Code: " + this.ID_produit + " | Prix: "
+                + this.Prix_vente + " dt.");
     }
 
     public void Remise(float r) {
