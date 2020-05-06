@@ -1,6 +1,7 @@
+import java.util.UUID;
 
 public class Produit {
-    private int ID_produit;
+    private String ID_produit;
     private String Nom_produit;
     private Double Prix_achat;
     private Double Prix_vente;
@@ -8,7 +9,7 @@ public class Produit {
     private String Marque;
     private int qte;
 
-    public int getID_produit() {
+    public String getID_produit() {
         return ID_produit;
     }
 
@@ -20,7 +21,7 @@ public class Produit {
         this.qte = qte;
     }
 
-    public void setID_produit(int iD_produit) {
+    public void setID_produit(String iD_produit) {
         this.ID_produit = iD_produit;
     }
 
@@ -64,9 +65,10 @@ public class Produit {
         this.Marque = marque;
     }
 
-    public Produit(int iD_produit, String nom_produit, Double prix_achat, Double prix_vente, String Categ_produit,
+    public Produit(String nom_produit, Double prix_achat, Double prix_vente, String Categ_produit,
             String marque, int qte) {
-        this.ID_produit = iD_produit;
+        String uuid= UUID.randomUUID().toString();
+        this.ID_produit=uuid.substring(0, uuid.indexOf('-'));
         this.Nom_produit = nom_produit;
         this.Prix_achat = prix_achat;
         this.Prix_vente = prix_vente;
