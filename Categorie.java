@@ -83,11 +83,7 @@ public class Categorie {
 
     public void SupprimerProduit(String ID) { // deletes a product
         Produit p = FindProductID(ID);
-        boolean operation = Tab_prod.remove(p);
-        // System.out.println("operation is " + operation);
-        if (operation == true) {
-            System.out.println("The product is successfully deleted");
-        }
+        Tab_prod.remove(p);
 
     }
 

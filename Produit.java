@@ -65,10 +65,11 @@ public class Produit {
         this.Marque = marque;
     }
 
-    public Produit(String nom_produit, Double prix_achat, Double prix_vente, String Categ_produit,
+    public Produit(String ID_produit, String nom_produit, Double prix_achat, Double prix_vente, String Categ_produit,
             String marque, int qte) {
-        String uuid= UUID.randomUUID().toString();
-        this.ID_produit=uuid.substring(0, uuid.indexOf('-'));
+        // String uuid= UUID.randomUUID().toString();
+        // this.ID_produit=uuid.substring(0, uuid.indexOf('-'));
+        this.ID_produit=ID_produit;
         this.Nom_produit = nom_produit;
         this.Prix_achat = prix_achat;
         this.Prix_vente = prix_vente;
@@ -81,7 +82,16 @@ public class Produit {
         System.out.println("Produit: " + this.Nom_produit);
         System.out.println("ID: " + this.ID_produit);
         System.out.println("Marque: " + this.Marque);
-        // System.out.println("Categorie: " + this.Categ_produit);
+        System.out.println("Categorie: " + this.Categ_produit);
+        System.out.println("Prix d'achat: " + this.Prix_achat + " dt.");
+        System.out.println("Prix de vente: " + this.Prix_vente + " dt.");
+        System.out.println("Quantitée: " + this.qte);
+    }
+
+    public void AfficheDetailsProduitDeCategorie() {
+        System.out.println("Produit: " + this.Nom_produit);
+        System.out.println("ID: " + this.ID_produit);
+        System.out.println("Marque: " + this.Marque);
         System.out.println("Prix d'achat: " + this.Prix_achat + " dt.");
         System.out.println("Prix de vente: " + this.Prix_vente + " dt.");
         System.out.println("Quantitée: " + this.qte);

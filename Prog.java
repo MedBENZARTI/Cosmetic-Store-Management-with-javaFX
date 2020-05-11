@@ -1,53 +1,45 @@
+import java.sql.SQLException;
 import java.util.UUID;
 
 public class Prog {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ClassNotFoundException, SQLException {
+        Connect c = new Connect();
+        // c.AjouterProduit("p1", 12.0, 13.0, "c1", "m1", 10);
+        // c.AjouterProduit("p2", 13.0, 15.0, "c2", "m2", 10);
+        // c.AjouterProduit("p3", 14.0, 15.0, "c1", "m3", 10);
+        // c.AjouterProduit("p4", 15.0, 18.0, "c4", "m4", 10);
+        // c.AjouterProduit("p5", 16.0, 19.0, "c1", "m5", 10);
+        c.AfficherStock();
+        c.AfficherStockSelonCategorie("c1");
+        // Produit p = c.LookForProdct("p4");
+        c.AjouterQteAuPriduit("p1", 50);
+        c.AfficherDetailsStock();
 
-        System.out.println();
-        Stock stock = new Stock("hammam lif");
-        stock.AjouterProduit("p1", 10.0, 12.0, "c1", "judy", 5);
-        stock.AjouterProduit("p2", 100.0, 120.0, "c2", "judy", 5);
-        stock.AjouterProduit("p3", 50.0, 52.0, "c1", "judy", 5);
-        stock.AjouterProduit("p4", 10.0, 12.0, "c3", "judy", 5);
-        stock.AjouterProduit("p5", 10.0, 12.0, "c2", "judy", 5);
+        
+        // System.out.println();
+        // Stock stock = new Stock("hammam lif");
+        // stock.AjouterProduit("p1", 10.0, 12.0, "c1", "judy", 5);
+        // stock.AjouterProduit("p2", 100.0, 120.0, "c2", "judy", 5);
+        // stock.AjouterProduit("p3", 50.0, 52.0, "c1", "judy", 5);
+        // stock.AjouterProduit("p4", 10.0, 12.0, "c3", "judy", 5);
+        // stock.AjouterProduit("p5", 10.0, 12.0, "c2", "judy", 5);
 
-
-        stock.AfficheStock();
-        // stock.ensemble();
-        System.out.println("-----------------------------------------------");
-        stock.AfficheStockCategories();
-        System.out.println("-----------------------------------------------");
-        Produit p = stock.DonnerProduitNum(1) ;
-        // stock.SupprimerProduit(p.getID_produit());
+        // stock.AfficheStockDetails();
+        // System.out.println("-----------------------------------------------");
         // stock.AfficheStockCategories();
         // System.out.println("-----------------------------------------------");
-        // stock.AfficheStock();
-        
-        }
+        // Produit p = stock.DonnerProduitNum(1) ;
+        // stock.SellProduct(p,2);
+        // stock.AfficheStockDetails();
+        // System.out.println("-----------------------------------------------");
+        // stock.AfficheStockCategories();
+        // stock.SellProduct(p,4);
+        // stock.SellProduct(p,3);
+        // stock.SellProduct(p,1);
+        // stock.AfficheStockDetails();
+        // System.out.println("-----------------------------------------------");
 
     }
 
-// Produit p1 = new Produit(11, "javel", 10.0, 12.0, "c", "judy", 5);
-// Produit p2 = new Produit(12, "shampoo", 100.0, 120.0, "c", "judy", 5);
-// Produit p3 = new Produit(12, "deo", 50.0, 52.0, "c", "judy", 5);
-
-// p1.AfficheProduitTicket();
-// p2.AfficheProduitTicket();
-// p3.AfficheProduitTicket();
-
-// Categorie c = new Categorie("c1", 123);
-// c.AjouterProduit(p1);
-// c.AjouterProduit(p2);
-// c.AjouterProduit(p3);
-// c.AfficheCategorie();
-// System.out.println("-----------------------------------------------");
-// // Produit p = c.FindProductID(11);
-// // p.AfficheProduitTicket();
-// // c.FindProductID(21);
-
-// c.SupprimerProduit(11);
-// System.out.println("-----------------------------------------------");
-// c.AfficheCategorieDetails();
-// System.out.println("-----------------------------------------------");
-// p1.AfficheProduitTicket();
+}
