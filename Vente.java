@@ -1,47 +1,64 @@
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.Hashtable;
+import java.sql.Date;
 
 public class Vente {
-    Hashtable<String, Integer> Ticket;
-    private Double Prix_tot;
-    Date Date_vente;
-    private String ID_vente;
+    private String Client_ID;
+    private String Vente_ID;
+    private String Product_ID;
+    Date Date_Vente;
+    private int qte;
 
-    public Double getPrix_tot() {
-        return Prix_tot;
+    public Vente(String client_ID, String vente_ID, String product_ID, Date new_date, int qte) {
+        Client_ID = client_ID;
+        Vente_ID= vente_ID;
+        Product_ID = product_ID;
+        Date_Vente = new_date;
+        this.qte = qte;
     }
 
-    public void setPrix_tot(Double prix_tot) {
-        Prix_tot = prix_tot;
+    public String getClient_ID() {
+        return Client_ID;
     }
 
-    public String getID_vente() {
-        return ID_vente;
+    public void setClient_ID(String client_ID) {
+        Client_ID = client_ID;
     }
 
-    public void setID_vente(String iD_vente) {
-        ID_vente = iD_vente;
+    public String getVente_ID() {
+        return Vente_ID;
     }
 
-    public Vente(Date date_vente, String iD_vente) {
-        this.Date_vente = date_vente;
-        this.ID_vente = iD_vente;
-        Ticket = new Hashtable<String, Integer>();
+    public void setVente_ID(String vente_ID) {
+        Vente_ID = vente_ID;
     }
 
-    public void AjouterProduitTicket(String id, int nbr){
-        Ticket.put(id, nbr);
+    public String getProduct_ID() {
+        return Product_ID;
     }
 
-    public void AfficheTicket(){
-        System.out.println("la liste des film:");
-        Enumeration e = Ticket.keys();
-        while (e.hasMoreElements()) {
-            String key = (String) e.nextElement();
-            int nbr = (int) Ticket.get(key);
-            
-        }
+    public void setProduct_ID(String product_ID) {
+        Product_ID = product_ID;
+    }
+
+    public Date getDate_Vente() {
+        return Date_Vente;
+    }
+
+    public void setDate_Vente(Date date_Vente) {
+        Date_Vente = date_Vente;
+    }
+
+    public int getQte() {
+        return qte;
+    }
+
+    public void setQte(int qte) {
+        this.qte = qte;
+    }
+
+    public void AfficherUneVente(){
+        System.out.println(">>> vente: ");
+        System.out.println("ID Vente: "+Vente_ID+" | ID Client: "+Client_ID+ " | ID produit: "+Product_ID);
+        System.out.println("> "+qte+" piece(s) | Date: "+Date_Vente);
     }
 
 }
