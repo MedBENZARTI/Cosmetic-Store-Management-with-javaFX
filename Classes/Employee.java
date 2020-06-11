@@ -28,9 +28,4 @@ public class Employee extends Person {
     }
 
 
-    // public void afficheemp() {
-    //     System.out.println("Employee [Grade=" + Grade + ", Salary=" + Salary + "]");
-    //     super.affiche();
-    // }
-
 }

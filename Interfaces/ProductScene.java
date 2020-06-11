@@ -1,12 +1,10 @@
 package Interfaces;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 
 import Classes.Category;
 import Classes.Product;
 import Connect.Connector;
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -21,15 +19,14 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 public class ProductScene {
     BorderPane border;
-    Connector con;
     TableView<Product> table;
     ProductAlertboxes p ;
 
-    public ProductScene(TableView<Category> t) throws Exception {
-        con = new Connector();
+    public ProductScene(Connector con,TableView<Category> t,Scene sc, Stage st) throws Exception {
         this.border = new BorderPane();
         table = new TableView<>();
         p = new ProductAlertboxes();
@@ -37,8 +34,9 @@ public class ProductScene {
         HBox Top = new HBox();
 
         Top.setPadding(new Insets(15, 12, 15, 12));
-        Top.setSpacing(350);
-        Top.setStyle("-fx-background-color: #67AB9F;");
+        Top.setSpacing(340);
+        Top.setId("pane1");
+        Top.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
 
         FileInputStream input = new FileInputStream("Icons/exit.png");
         Image exitimage = new Image(input);
@@ -52,11 +50,11 @@ public class ProductScene {
 
         VBox logout = new VBox();
         logout.setSpacing(5);
-        Text adrs = new Text("malek@tekup.de");
+        Text adrs = new Text("Utilisateur: mohamed");
         adrs.setFont(Font.font("Arial", FontWeight.BOLD, 14));
         Button exitb = new Button("", exitimageView);
-        exitb.setStyle("-fx-background-color: #67AB9F; ");
-        exitb.setOnAction(e -> System.out.println("ouuh ouuh !!"));
+        exitb.setStyle("-fx-background-color: #67AB9F00; ");
+        exitb.setOnAction(e -> st.setScene(sc));
         logout.getChildren().addAll(adrs, exitb);
         Top.getChildren().addAll(market, frame, logout);
 
@@ -123,7 +121,7 @@ public class ProductScene {
 
         Button supprimer = new Button("Supprimer");
         supprimer.setOnAction(e -> {
-            SupprimerButton();
+            SupprimerButton(con);
         });
         Buttons.getChildren().addAll(ajouter, modifier, remise, chercher, supprimer);
         Buttons.setPadding(new Insets(10, 20, 10, 20));
@@ -145,11 +143,11 @@ public class ProductScene {
         this.border.setLeft(v);
     }
 
-    public void SupprimerButton(){
+    public void SupprimerButton(Connector c){
         Product ProdSelected;
         ProdSelected = table.getSelectionModel().getSelectedItem();
+        c.deleteProduct(ProdSelected);
         table.getItems().remove(ProdSelected);
-        con.deleteProduct(ProdSelected);
     }
 
     public BorderPane getborder() {
@@ -158,5 +156,18 @@ public class ProductScene {
 
     public void setborder(BorderPane b) {
         this.border = b;
+    }
+
+    public TableView<Product> gettable(){
+        return table;
+    }
+
+    public void settable(TableView<Product> p){
+        table=p;
+    } 
+    
+    public void refresh(){
+        Connector c = new Connector();
+        table.setItems(c.AllProducts());
     }
 }

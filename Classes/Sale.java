@@ -1,13 +1,13 @@
 package Classes;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 public class Sale {
     private String ClientID;
     private String SaleID;
     private String ProductID;
     private String EmployeeID;
-    Date SaleDate;
+    Timestamp SaleDate;
     private int Qte;
     private Double TotalePrice;
 
@@ -43,11 +43,11 @@ public class Sale {
         ProductID = productID;
     }
 
-    public Date getSaleDate() {
+    public Timestamp getSaleDate() {
         return SaleDate;
     }
 
-    public void setSaleDate(Date saleDate) {
+    public void setSaleDate(Timestamp saleDate) {
         SaleDate = saleDate;
     }
 
@@ -59,7 +59,7 @@ public class Sale {
         Qte = qte;
     }
 
-    public Sale(String clientID, String saleID, String productID, Date saleDate, int qte,Double totalePrice,String employeeID) {
+    public Sale(String clientID, String saleID, String productID, Timestamp saleDate, int qte,Double totalePrice,String employeeID) {
         ClientID = clientID;
         SaleID = saleID;
         ProductID = productID;

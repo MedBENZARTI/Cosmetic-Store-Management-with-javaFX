@@ -3,12 +3,12 @@ package Interfaces;
 import java.io.FileInputStream;
 
 import Classes.Client;
-import Classes.Product;
 import Connect.Connector;
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -20,24 +20,34 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 public class ClientScene {
     BorderPane border;
-    Connector con;
     TableView<Client> table;
+    ClientAlertboxes cl;
+    ChoiceBox<String>choice;
+
+    public ChoiceBox<String> getchoice(){
+        return this.choice;
+    }
+
+    public void setchoice (ChoiceBox<String>choix){
+        this.choice = choix;
+    }
 
 
-    public ClientScene() throws Exception {
-        con = new Connector();
+    public ClientScene(Connector con,Scene sc, Stage st) throws Exception {
         this.border = new BorderPane();
         table = new TableView<>();
+        cl = new ClientAlertboxes();
         // Top part
         HBox Top = new HBox();
 
         Top.setPadding(new Insets(15, 12, 15, 12));
-        Top.setSpacing(350);
-        Top.setStyle("-fx-background-color: #67AB9F;");
-
+        Top.setSpacing(353);
+        Top.setId("pane1");
+        Top.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
         FileInputStream input = new FileInputStream("Icons/exit.png");
         Image exitimage = new Image(input);
         ImageView exitimageView = new ImageView(exitimage);
@@ -50,11 +60,11 @@ public class ClientScene {
 
         VBox logout = new VBox();
         logout.setSpacing(5);
-        Text adrs = new Text("malek@tekup.de");
+        Text adrs = new Text("Utilisateur: mohamed");
         adrs.setFont(Font.font("Arial", FontWeight.BOLD, 14));
         Button exitb = new Button("", exitimageView);
-        exitb.setStyle("-fx-background-color: #67AB9F; ");
-        exitb.setOnAction(e -> System.out.println("ouuh ouuh !!"));
+        exitb.setStyle("-fx-background-color: #67AB9F00; ");
+        exitb.setOnAction(e -> st.setScene(sc));
         logout.getChildren().addAll(adrs, exitb);
         Top.getChildren().addAll(market, frame, logout);
 
@@ -65,19 +75,19 @@ public class ClientScene {
 
         // Table creation
         TableColumn<Client, String> idColumn = new TableColumn<>("ID");
-        idColumn.setPrefWidth(120);
+        idColumn.setPrefWidth(220);
         idColumn.setCellValueFactory(new PropertyValueFactory<>("ID"));
 
-        TableColumn<Client, String> fnameColumn = new TableColumn<>("Nom");
-        fnameColumn.setPrefWidth(120);
+        TableColumn<Client, String> fnameColumn = new TableColumn<>("Prénom");
+        fnameColumn.setPrefWidth(220);
         fnameColumn.setCellValueFactory(new PropertyValueFactory<>("FirstName"));
 
-        TableColumn<Client, String> lnameColumn = new TableColumn<>("Prix d'Achat");
-        lnameColumn.setPrefWidth(150);
+        TableColumn<Client, String> lnameColumn = new TableColumn<>("Nom");
+        lnameColumn.setPrefWidth(220);
         lnameColumn.setCellValueFactory(new PropertyValueFactory<>("LastName"));
 
-        TableColumn<Client, String> phnnbr = new TableColumn<>("Prix de Vente");
-        phnnbr.setPrefWidth(150);
+        TableColumn<Client, String> phnnbr = new TableColumn<>("Numéro de tel");
+        phnnbr.setPrefWidth(220);
         phnnbr.setCellValueFactory(new PropertyValueFactory<>("PhoneNbr"));
 
 
@@ -89,17 +99,26 @@ public class ClientScene {
 
         Button ajouter = new Button("Ajouter");
         ajouter.setOnAction(e -> {
+            cl.ajouter(table,choice);
         });
 
         Button modifier = new Button("Modifier");
         modifier.setOnAction(e -> {
+            cl.modifier(table.getSelectionModel().getSelectedItem(), table);
         });
 
-        Button vente = new Button("Vente");
+        Button vente = new Button("Ventes");
         vente.setOnAction(e -> {
+            cl.consulter(table.getSelectionModel().getSelectedItem());
         });
 
         Button supprimer = new Button("Supprimer");
+        supprimer.setOnAction(e->{
+            Client selectedclient = table.getSelectionModel().getSelectedItem();
+            con.deleteClient(selectedclient);
+            table.getItems().clear();
+            table.setItems(con.AllClients());
+        });
 
         Buttons.getChildren().addAll(ajouter, modifier, vente, supprimer);
         Buttons.setPadding(new Insets(10, 20, 10, 20));
@@ -127,5 +146,9 @@ public class ClientScene {
 
     public void setborder(BorderPane b) {
         this.border = b;
+    }
+
+    public TableView<Client> getClientTable(){
+        return this.table;
     }
 }

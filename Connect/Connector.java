@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.UUID;
 
 import Classes.*;
@@ -62,8 +63,8 @@ public class Connector {
         try {
             res = stmt.executeQuery(req);
             while (res.next()) {
-                Sale s = new Sale(res.getString(1), res.getString(2), res.getString(4), res.getDate(5), res.getInt(6),
-                        res.getDouble(7), res.getString(3));
+                Sale s = new Sale(res.getString(1), res.getString(2), res.getString(3), res.getTimestamp(5), res.getInt(6),
+                        res.getDouble(7), res.getString(4));
                 list_sale.add(s);
             }
         } catch (Exception e) {
@@ -143,7 +144,7 @@ public class Connector {
             pStatement.setString(2, s.getSaleID());
             pStatement.setString(3, s.getProductID());
             pStatement.setString(4, s.getEmployeeID());
-            pStatement.setDate(5, s.getSaleDate());
+            pStatement.setTimestamp(5, s.getSaleDate());
             pStatement.setInt(6, s.getQte());
             pStatement.setDouble(7, s.getTotalePrice());
 
@@ -201,6 +202,7 @@ public class Connector {
             pStatement = C.prepareStatement("Delete from product where ProductID = ? ");
             pStatement.setString(1, p.getProductID());
             int r = pStatement.executeUpdate();
+            System.out.println("Prod deleted");
         } catch (SQLException e1) {
             // TODO Auto-generated catch block
             e1.printStackTrace();
@@ -220,7 +222,7 @@ public class Connector {
 
     public void deleteClient(Client c) {
         try {
-            pStatement = C.prepareStatement("Delete from client where ID = ? ");
+            pStatement = C.prepareStatement("Delete from client where ClientID = ? ");
             pStatement.setString(1, c.getID());
             int r = pStatement.executeUpdate();
         } catch (SQLException e1) {
@@ -277,6 +279,34 @@ public class Connector {
             e.printStackTrace();
         }
         return list_product.get(0);
+    }
+    public Employee getEmployeeByID(String id) {
+        String req = "select * from employee where ID = '" + id + "'";
+        ObservableList<Employee> list_employee = FXCollections.observableArrayList();
+        try {
+            res = stmt.executeQuery(req);
+            while (res.next()) {
+                Employee emp = new Employee(res.getString(1), res.getString(2), res.getString(3), res.getInt(4), res.getString(5), res.getDouble(6));
+                list_employee.add(emp);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list_employee.get(0);
+    }
+    public Client getClientByID(String id) {
+        String req = "select * from client where ClientID = '" + id + "'";
+        ObservableList<Client> list_client = FXCollections.observableArrayList();
+        try {
+            res = stmt.executeQuery(req);
+            while (res.next()) {
+                Client c = new Client(res.getString(1), res.getString(2), res.getString(3), res.getInt(4));
+                list_client.add(c);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list_client.get(0);
     }
 
     public Product getProdByIDandPrice(String id, Double p) {
@@ -335,25 +365,25 @@ public class Connector {
         return list_product;
     }
 
-    public ObservableList<Product> Filtreonlyprice(String nom, Double mn, Double Mx, String Categ) {
-        ObservableList<Product> list_product = FXCollections.observableArrayList();
-        try {
-            pStatement = C.prepareStatement(
-                    "select * from product where ProductName = ? and ProductCat = ? and SellingPrice between ? and ?");
-            res = pStatement.executeQuery();
-            while (res.next()) {
-                Product pr = new Product(res.getString(1), res.getString(2), res.getDouble(3), res.getDouble(4),
-                        res.getString(5), res.getString(6), res.getInt(7));
-                list_product.add(pr);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    // public ObservableList<Product> Filtreonlyprice(String nom, Double mn, Double Mx, String Categ) {
+    //     ObservableList<Product> list_product = FXCollections.observableArrayList();
+    //     try {
+    //         pStatement = C.prepareStatement(
+    //                 "select * from product where ProductName = ? and ProductCat = ? and SellingPrice between ? and ?");
+    //         res = pStatement.executeQuery();
+    //         while (res.next()) {
+    //             Product pr = new Product(res.getString(1), res.getString(2), res.getDouble(3), res.getDouble(4),
+    //                     res.getString(5), res.getString(6), res.getInt(7));
+    //             list_product.add(pr);
+    //         }
+    //     } catch (Exception e) {
+    //         e.printStackTrace();
+    //     }
 
-        return list_product;
-    }
+    //     return list_product;
+    // }
 
-    public ObservableList<Product> getProductByCategory(String c ) {
+    public ObservableList<Product> getProductByCategory(String c) {
         ObservableList<Product> list_product = FXCollections.observableArrayList();
         try {
             pStatement = C.prepareStatement("select * from product where ProductCat = ?");
@@ -368,5 +398,129 @@ public class Connector {
             e.printStackTrace();
         }
         return list_product;
+    }
+
+    public ArrayList<String> getCategoriesNames() {
+        ArrayList<String> Categs = new ArrayList<>();
+        try {
+            pStatement = C.prepareStatement("select CatName from category");
+            res = pStatement.executeQuery();
+            while (res.next()) {
+                Categs.add(res.getString(1));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return Categs;
+    }
+
+    public ObservableList<String> employeeToString() {
+        ObservableList<String> employee = FXCollections.observableArrayList();
+        try {
+            pStatement = C.prepareStatement("select ID, FirstName , LastName,Grade from employee");
+            res = pStatement.executeQuery();
+            while (res.next()) {
+                String emp = res.getString(1) + " | "+res.getString(2) +" "+ res.getString(3) + " | " + res.getString(4);
+                employee.add(emp);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return employee;
+    }
+
+    public ObservableList<String> clientToString() {
+        ObservableList<String> client = FXCollections.observableArrayList();
+        try {
+            pStatement = C.prepareStatement("select ClientID, FirstName , LastName from client");
+            res = pStatement.executeQuery();
+            while (res.next()) {
+                String cl = res.getString(1) + " | " + res.getString(2)+" "+res.getString(3);
+                client.add(cl);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return client;
+    }
+
+    public ObservableList<String> prodToString() {
+        ObservableList<String> prod = FXCollections.observableArrayList();
+        try {
+            pStatement = C.prepareStatement("select ProductID , ProductName , Mark from product");
+            res = pStatement.executeQuery();
+            while (res.next()) {
+                String pr = res.getString(1) + " | " + res.getString(2) + " | " + res.getString(3);
+                prod.add(pr);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return prod;
+    }
+
+    public ObservableList<Sale> SalesByEmployee(String id) {
+        String req = "select * from sale where employeeID = '"+id+"'";
+        ObservableList<Sale> list_sale = FXCollections.observableArrayList();
+        try {
+            res = stmt.executeQuery(req);
+            while (res.next()) {
+                Sale s = new Sale(res.getString(1), res.getString(2), res.getString(4), res.getTimestamp(5), res.getInt(6),
+                        res.getDouble(7), res.getString(3));
+                list_sale.add(s);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list_sale;
+    }
+    public ObservableList<Sale> SalesByClient(String id) {
+        String req = "select * from sale where ClientID = '"+id+"'";
+        ObservableList<Sale> list_sale = FXCollections.observableArrayList();
+        try {
+            res = stmt.executeQuery(req);
+            while (res.next()) {
+                Sale s = new Sale(res.getString(1), res.getString(2), res.getString(4), res.getTimestamp(5), res.getInt(6),
+                        res.getDouble(7), res.getString(3));
+                list_sale.add(s);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list_sale;
+    }
+
+    public ObservableList<Sale> salesByDate(String date1,String date2,String id) {
+        String req = "select * from sale where SaleDate between '"+date1+"' and '"+date2+"' and ClientID = '"+id+"'";
+        System.out.println(req);
+        ObservableList<Sale> list_sale = FXCollections.observableArrayList();
+        try {
+            res = stmt.executeQuery(req);
+            while (res.next()) {
+                Sale s = new Sale(res.getString(1), res.getString(2), res.getString(4), res.getTimestamp(5), res.getInt(6),
+                        res.getDouble(7), res.getString(3));
+                list_sale.add(s);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list_sale;
+    }
+
+    public ObservableList<Sale> salesByDateForEmployee(String date1,String date2,String id) {
+        String req = "select * from sale where SaleDate between '"+date1+"' and '"+date2+"' and ProductID = '"+id+"'";
+        System.out.println(req);
+        ObservableList<Sale> list_sale = FXCollections.observableArrayList();
+        try {
+            res = stmt.executeQuery(req);
+            while (res.next()) {
+                Sale s = new Sale(res.getString(1), res.getString(2), res.getString(4), res.getTimestamp(5), res.getInt(6),
+                        res.getDouble(7), res.getString(3));
+                list_sale.add(s);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list_sale;
     }
 }

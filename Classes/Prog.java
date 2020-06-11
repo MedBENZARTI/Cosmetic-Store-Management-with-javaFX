@@ -1,17 +1,19 @@
 package Classes;
 
-import java.sql.SQLException;
-
-import Connect.Connector;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 // import Interfaces.*;
 
 public class Prog {
 
-    public static void main(String[] args) throws ClassNotFoundException, SQLException {
-    Product p = new Product("bfh5ri9", "p1", 12.0, 13.0, "c1", "m1", 10);
-    Connector c = new Connector();
-    c.addPorduct(p);
+    public static void main(String[] args)  {
+        LocalDateTime myDateObj = LocalDateTime.now();
+        System.out.println("Before formatting: " + myDateObj);
+        DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("YYYY-MM-DD HH:MI:SS");
+    
+        String formattedDate = myDateObj.format(myFormatObj);
+        System.out.println("After formatting: " + formattedDate);
 }
 
 }

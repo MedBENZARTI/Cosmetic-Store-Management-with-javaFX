@@ -1,0 +1,24 @@
+#pane {
+  -fx-background-image: url("login.jpg");
+  -fx-background-repeat: stretch;
+  /* -fx-background-size: 1200 800; */
+  -fx-background-position: center center;
+  -fx-effect: dropshadow(three-pass-box, black, 30, 0.5, 0, 0);
+}
+#pane1 {
+  -fx-background-image: url("login.jpg");
+  -fx-background-repeat: stretch;
+  -fx-background-size: 1200 800;
+  -fx-background-position: center center;
+  -fx-effect: dropshadow(three-pass-box, black, 30, 0.5, 0, 0);
+  
+}
+#pane2 {
+  -fx-background-image: url("left.jpg");
+  -fx-background-repeat: stretch;
+  /* -fx-background-size: 1200 800; */
+  -fx-background-position: center center;
+  /* -fx-effect: dropshadow(three-pass-box, black, 30, 0.5, 0, 0); */
+  
+/*    */
+}

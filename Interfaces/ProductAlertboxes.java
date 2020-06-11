@@ -1,5 +1,6 @@
 package Interfaces;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 import Classes.Category;
@@ -32,7 +33,7 @@ class ProductAlertboxes {
 
     // ------THE ADD BUTTON-------------
     // ---------------------------------
-    public void ajouter(TableView<Product> table,TableView<Category> tablecateg) {
+    public void ajouter(TableView<Product> table, TableView<Category> tablecateg) {
         Stage window = new Stage();
 
         window.initModality(Modality.APPLICATION_MODAL);
@@ -112,9 +113,12 @@ class ProductAlertboxes {
             p = new Product(newID(), a1, b1, c1, d1, e1, f1);
             Connector c = new Connector();
             c.addPorduct(p);
-            Category cat =new Category(p.getProductCat(), newID());
-            c.addCategory(cat);
-            tablecateg.getItems().add(cat);
+            ArrayList<String> categs = c.getCategoriesNames();
+            if (!categs.contains(p.getProductCat())) {
+                Category cat = new Category(p.getProductCat(), newID());
+                c.addCategory(cat);
+                tablecateg.getItems().add(cat);
+            }
             table.getItems().add(p);
             window.close();
         });
@@ -346,7 +350,7 @@ class ProductAlertboxes {
         window.setMinWidth(250);
 
         VBox v = new VBox(addTitle("Chercher des produits"));
-        //the filtre
+        // the filtre
         ////////////
 
         GridPane g = new GridPane();
@@ -381,7 +385,7 @@ class ProductAlertboxes {
         // add to gridpane
         g.getChildren().addAll(l0, name, l1, minprice, l2, Maxprice);
 
-        //making the table
+        // making the table
         /////////////////
         TableColumn<Product, String> idColumn = new TableColumn<>("ID");
         idColumn.setPrefWidth(120);
@@ -415,25 +419,25 @@ class ProductAlertboxes {
         tab.setItems(null);
         tab.getColumns().addAll(idColumn, nameColumn, bpriceColumn, spriceColumn, catColumn, markColumn, qteColumn);
 
-        //the buttons
+        // the buttons
         /////////////
         Button retour = new Button("Retour");
         retour.setOnAction(e -> window.close());
         Button chercher = new Button("Chercher");
-        chercher.setOnAction(e->{
+        chercher.setOnAction(e -> {
             Connector con = new Connector();
             Double minpriceprod;
             Double maxpriceprod;
             if (minprice.getText().isEmpty()) {
                 minpriceprod = 0.0;
             } else {
-                minpriceprod =  Double.parseDouble(minprice.getText());
+                minpriceprod = Double.parseDouble(minprice.getText());
             }
 
             if (Maxprice.getText().isEmpty()) {
                 maxpriceprod = 999999999.0;
             } else {
-                maxpriceprod =  Double.parseDouble(Maxprice.getText());
+                maxpriceprod = Double.parseDouble(Maxprice.getText());
             }
 
             if (name.getText().isEmpty()) {
@@ -441,7 +445,6 @@ class ProductAlertboxes {
             } else {
                 tab.setItems(con.Filtrewithname(name.getText(), minpriceprod, maxpriceprod));
             }
-            
 
         });
         HBox b = new HBox(retour, chercher);
@@ -452,7 +455,7 @@ class ProductAlertboxes {
         v.setAlignment(Pos.CENTER);
         v.setPadding(new Insets(20, 10, 10, 10));
         v.setSpacing(15);
-        v.getChildren().addAll(g,tab,b);
+        v.getChildren().addAll(g, tab, b);
         Scene s = new Scene(v);
         window.setScene(s);
         window.show();

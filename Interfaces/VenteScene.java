@@ -1,12 +1,11 @@
 package Interfaces;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 
+import Classes.Client;
 import Classes.Product;
 import Classes.Sale;
 import Connect.Connector;
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -22,24 +21,34 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 public class VenteScene {
-    private Scene scene;
-    Connector con;
-    TableView<Sale> table;
-    private Button b ;
     BorderPane border;
+    TableView<Sale> table;
+    TableView<Client> tabclient;
 
-    public VenteScene() throws Exception {
+
+
+    public TableView<Client> gettabclient(){
+        return tabclient;
+    }
+    public void settableclient(TableView<Client> tab){
+        this.tabclient = tab;
+    }
+
+    public VenteScene(Connector con,TableView<Product> tabprod,Scene sc, Stage st ) throws Exception {
         con=new Connector();
         this.border = new BorderPane();
+        VenteAlertboxes v = new VenteAlertboxes();
         table = new TableView<>();
         //Top part
         HBox Top = new HBox();
 
         Top.setPadding(new Insets(15, 12, 15, 12));
-        Top.setSpacing(350);
-        Top.setStyle("-fx-background-color: #67AB9F;");
+        Top.setSpacing(358);
+        Top.setId("pane1");
+        Top.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
 
         FileInputStream input = new FileInputStream("Icons/exit.png");
         Image exitimage = new Image(input);
@@ -53,11 +62,11 @@ public class VenteScene {
 
         VBox logout = new VBox();
         logout.setSpacing(5);
-        Text adrs = new Text("malek@tekup.de");
+        Text adrs = new Text("Utilisateur: mohamed");
         adrs.setFont(Font.font("Arial", FontWeight.BOLD, 14));
         Button exitb = new Button("", exitimageView);
-        exitb.setStyle("-fx-background-color: #67AB9F; ");
-        exitb.setOnAction(e -> System.out.println("ouuh ouuh !!"));
+        exitb.setStyle("-fx-background-color: #67AB9F00; ");
+        exitb.setOnAction(e -> st.setScene(sc));
         logout.getChildren().addAll(adrs, exitb);
         Top.getChildren().addAll(market, frame, logout);
 
@@ -65,9 +74,6 @@ public class VenteScene {
 
         //Center part
         VBox Center = new VBox();
-
-        ObservableList <Product> productlist;
-        
         //Table creation
 
         TableColumn<Sale, String> saleColumn = new TableColumn<>("Vente ID");
@@ -84,14 +90,14 @@ public class VenteScene {
 
         TableColumn<Sale, String> employeeColumn = new TableColumn<>("Employee ID");
         employeeColumn.setPrefWidth(150);
-        employeeColumn.setCellValueFactory(new PropertyValueFactory<>("SellinEmployeeIDgPrice"));
+        employeeColumn.setCellValueFactory(new PropertyValueFactory<>("EmployeeID"));
 
         TableColumn<Sale, String> dateColumn = new TableColumn<>("Date du vente");
-        dateColumn.setPrefWidth(120);
+        dateColumn.setPrefWidth(160);
         dateColumn.setCellValueFactory(new PropertyValueFactory<>("SaleDate"));
 
         TableColumn<Sale, String> qteColumn = new TableColumn<>("Quantité");
-        qteColumn.setPrefWidth(120);
+        qteColumn.setPrefWidth(80);
         qteColumn.setCellValueFactory(new PropertyValueFactory<>("Qte"));
 
         TableColumn<Sale, String> priceColumn = new TableColumn<>("Prix total");
@@ -105,18 +111,28 @@ public class VenteScene {
         HBox Buttons = new HBox();
         Button ajouter = new Button("Ajouter");
         
-        // ajouter.setOnAction(e -> {
-        //     ProductAlertboxes p = new ProductAlertboxes();
-        //     // Product prod = p.ajouter();
+        ajouter.setOnAction(e -> {
+          v.ajouter(table,tabclient,tabprod);
 
-        // });
+        });
         Button consulter = new Button("Consulter");
-        // consulter.setOnAction(e -> {
-        //     ProductAlertboxes p = new ProductAlertboxes();
-        //     p.modifier();
-        // });
+        consulter.setOnAction(e->v.details1(table.getSelectionModel().getSelectedItem()));
 
         Button supprimer = new Button("Supprimer");
+        supprimer.setOnAction(e->{
+            Connector cc = new Connector();
+            Sale SelectedSale = table.getSelectionModel().getSelectedItem();
+            int nbr = SelectedSale.getQte();
+            Product beforDelete = cc.getProdByID(SelectedSale.getProductID());
+            beforDelete.AfficheDetailsProduct();
+            Product afterDelete = new Product(beforDelete.getProductID(), beforDelete.getProductName(),beforDelete.getBuyingPrice(),beforDelete.getSellingPrice(), beforDelete.getProductCat(),beforDelete.getMark(),beforDelete.getQte()+nbr);
+            cc.deleteSale(SelectedSale);
+            cc.deleteProduct(beforDelete);
+            cc.addPorduct(afterDelete);
+            tabprod.getItems().clear();
+            tabprod.setItems(cc.AllProducts());
+            table.getItems().remove(SelectedSale);
+        });
         
         Buttons.getChildren().addAll(ajouter,consulter, supprimer);
         Buttons.setPadding(new Insets(10, 20, 10, 20));
@@ -128,23 +144,9 @@ public class VenteScene {
 
         //Collecting center part
         Center.getChildren().addAll(table,Buttons);
-        
         this.border.setTop(Top);
-
         this.border.setCenter(Center);
-        // scene = new Scene(border, 1100, 600);
 
-    }
-
-    public void addproducts(Product p){
-        ObservableList<Product> l = con.AllProducts();
-        l.add(p);
-        
-    }
-    public void deleteButtonClicked(){
-        ObservableList <Sale> saleSelected, allSales;
-        allSales = table.getItems();
-        saleSelected= table.getSelectionModel().getSelectedItems();
     }
 
     public void addleft(VBox v){
@@ -159,18 +161,6 @@ public class VenteScene {
         this.border = b;
 
     }
-    public Scene getScene() {
-        return scene;
-    }
 
-    public void setScene(Scene scene) {
-        this.scene = scene;
-    }
-    public Button getb() {
-        return b;
-    }
 
-    public void setb(Button but) {
-        this.b = but;
-    }
 }

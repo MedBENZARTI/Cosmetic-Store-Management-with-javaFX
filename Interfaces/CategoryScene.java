@@ -6,35 +6,40 @@ import Classes.Category;
 import Connect.Connector;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 public class CategoryScene {
     BorderPane border;
-    Connector con;
     TableView<Category> table;
 
-    public CategoryScene() throws Exception {
-        con = new Connector();
+    public CategoryScene(Connector con,Scene sc, Stage st) throws Exception {
         this.border = new BorderPane();
         CategoryAlertboxes cat = new CategoryAlertboxes();
         table = new TableView<>();
         // Top part
         HBox Top = new HBox();
+        Top.setId("pane1");
+        Top.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
+
+
 
         Top.setPadding(new Insets(15, 12, 15, 12));
-        Top.setSpacing(350);
-        Top.setStyle("-fx-background-color: #67AB9F;");
+        // Top.setPadding(new Insets(0));
+        Top.setSpacing(317);
 
         FileInputStream input = new FileInputStream("Icons/exit.png");
         Image exitimage = new Image(input);
@@ -48,11 +53,11 @@ public class CategoryScene {
 
         VBox logout = new VBox();
         logout.setSpacing(5);
-        Text adrs = new Text("malek@tekup.de");
+        Text adrs = new Text("Utilisateur: mohamed");
         adrs.setFont(Font.font("Arial", FontWeight.BOLD, 14));
         Button exitb = new Button("", exitimageView);
-        exitb.setStyle("-fx-background-color: #67AB9F; ");
-        exitb.setOnAction(e -> System.out.println("ouuh ouuh !!"));
+        exitb.setStyle("-fx-background-color: #67AB9F00; ");
+        exitb.setOnAction(e -> st.setScene(sc));
         logout.getChildren().addAll(adrs, exitb);
         Top.getChildren().addAll(market, frame, logout);
 
@@ -89,8 +94,9 @@ public class CategoryScene {
 
         Button supprimer = new Button("Supprimer");
         supprimer.setOnAction(e->{
-            table.getItems().remove(table.getSelectionModel().getSelectedItem());
+            System.out.println(table.getSelectionModel().getSelectedIndex());
             con.deleteCategory(table.getSelectionModel().getSelectedItem());
+            table.getItems().remove(table.getSelectionModel().getSelectedItem());
         });
 
         Buttons.getChildren().addAll(ajouter, consulter, supprimer);
