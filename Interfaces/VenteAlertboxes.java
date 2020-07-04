@@ -12,12 +12,14 @@ import Connect.Connector;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -32,15 +34,14 @@ class VenteAlertboxes {
     Product p;
     Connector con = new Connector();
     ChoiceBox<String> choice;
-    
 
     public VenteAlertboxes() {
-        
+
     }
 
     // ------THE ADD BUTTON-------------
     // ---------------------------------
-    public void ajouter(TableView<Sale> tablesales, TableView<Client> tableclient,TableView<Product> tabprod) {
+    public void ajouter(TableView<Sale> tablesales, TableView<Client> tableclient, TableView<Product> tabprod) {
         Stage window = new Stage();
 
         window.initModality(Modality.APPLICATION_MODAL);
@@ -102,18 +103,28 @@ class VenteAlertboxes {
             Client cli = con.getClientByID(IDfromData(choice.getValue()));
             Product prod = con.getProdByID(IDfromData(product.getValue()));
             int qtee = Integer.parseInt(qte.getText());
-            Timestamp t = new Timestamp(newdate());
-            Sale s = new Sale(cli.getID(), newID(), prod.getProductID(), t, qtee, qtee * prod.getSellingPrice(),
-                    emp.getID());
-            con.addSale(s);
-            tablesales.getItems().add(s);
-            Product newproduct = new Product(prod.getProductID(), prod.getProductName(), prod.getBuyingPrice(), prod.getSellingPrice(),prod.getProductCat(),prod.getMark(), prod.getQte());
-            newproduct.setQte(prod.getQte()-qtee);
-            con.deleteProduct(prod);
-            con.addPorduct(newproduct);
-            tabprod.getItems().clear();
-            tabprod.setItems(con.AllProducts());
-            window.close();
+            if (qtee > prod.getQte()) {
+                Alert al = new Alert(AlertType.WARNING);
+                al.setTitle("WARNING");
+                al.setHeaderText("quantité insuffisante");
+                al.setContentText("Il ne reste que " + prod.getQte() + " pièce(s)");
+                al.show();
+            } else {
+                Timestamp t = new Timestamp(newdate());
+                Sale s = new Sale(cli.getID(), newID(), prod.getProductID(), t, qtee, qtee * prod.getSellingPrice(),
+                        emp.getID());
+                con.addSale(s);
+                tablesales.getItems().add(s);
+                Product newproduct = new Product(prod.getProductID(), prod.getProductName(), prod.getBuyingPrice(),
+                        prod.getSellingPrice(), prod.getProductCat(), prod.getMark(), prod.getQte());
+                newproduct.setQte(prod.getQte() - qtee);
+                con.deleteProduct(prod);
+                con.addPorduct(newproduct);
+                tabprod.getItems().clear();
+                tabprod.setItems(con.AllProducts());
+                window.close();
+            }
+
         });
 
         HBox b = new HBox(leftb, rightb);
@@ -130,7 +141,6 @@ class VenteAlertboxes {
         window.show();
 
     }
-
 
     private String newID() {
         String uuid = UUID.randomUUID().toString();
@@ -160,13 +170,13 @@ class VenteAlertboxes {
         return date.getTime();
     }
 
-    public String dateFromTimestamp(Timestamp time){
+    public String dateFromTimestamp(Timestamp time) {
         String date = time.toString();
         return date.substring(0, date.indexOf(' '));
     }
 
-    public String dateToFullDate(String date){
-        return date+" 00:00:00";
+    public String dateToFullDate(String date) {
+        return date + " 00:00:00";
     }
 
     public void details(Sale sale) {
@@ -189,7 +199,8 @@ class VenteAlertboxes {
         Label l0 = new Label("Client");
         GridPane.setConstraints(l0, 0, 0);
         // datemin input
-        TextField client = new TextField(con.getClientByID(sale.getClientID()).getFirstName()+" "+con.getClientByID(sale.getClientID()).getLastName());
+        TextField client = new TextField(con.getClientByID(sale.getClientID()).getFirstName() + " "
+                + con.getClientByID(sale.getClientID()).getLastName());
         client.setDisable(true);
         GridPane.setConstraints(client, 1, 0);
 
@@ -198,16 +209,16 @@ class VenteAlertboxes {
         GridPane.setConstraints(l1, 0, 1);
         Product p = con.getProdByID(sale.getEmployeeID());
         // Product input
-        TextField product = new TextField(p.getProductName()+" | "+p.getMark());
+        TextField product = new TextField(p.getProductName() + " | " + p.getMark());
         product.setDisable(true);
         GridPane.setConstraints(product, 1, 1);
-        
+
         // Employee label
         Label l2 = new Label("Employé ");
         GridPane.setConstraints(l2, 0, 2);
         Employee em = con.getEmployeeByID(sale.getProductID());
         // Employee input
-        TextField employee = new TextField(em.getFirstName()+" "+em.getLastName());
+        TextField employee = new TextField(em.getFirstName() + " " + em.getLastName());
         employee.setDisable(true);
         GridPane.setConstraints(employee, 1, 2);
         // add to gridpane
@@ -249,7 +260,8 @@ class VenteAlertboxes {
         Label l0 = new Label("Client");
         GridPane.setConstraints(l0, 0, 0);
         // datemin input
-        TextField client = new TextField(con.getClientByID(sale.getClientID()).getFirstName()+" "+con.getClientByID(sale.getClientID()).getLastName());
+        TextField client = new TextField(con.getClientByID(sale.getClientID()).getFirstName() + " "
+                + con.getClientByID(sale.getClientID()).getLastName());
         client.setDisable(true);
         GridPane.setConstraints(client, 1, 0);
 
@@ -258,16 +270,16 @@ class VenteAlertboxes {
         GridPane.setConstraints(l1, 0, 1);
         Product p = con.getProdByID(sale.getProductID());
         // Product input
-        TextField product = new TextField(p.getProductName()+" | "+p.getMark());
+        TextField product = new TextField(p.getProductName() + " | " + p.getMark());
         product.setDisable(true);
         GridPane.setConstraints(product, 1, 1);
-        
+
         // Employee label
         Label l2 = new Label("Employé ");
         GridPane.setConstraints(l2, 0, 2);
         Employee em = con.getEmployeeByID(sale.getEmployeeID());
         // Employee input
-        TextField employee = new TextField(em.getFirstName()+" "+em.getLastName());
+        TextField employee = new TextField(em.getFirstName() + " " + em.getLastName());
         employee.setDisable(true);
         GridPane.setConstraints(employee, 1, 2);
         // add to gridpane

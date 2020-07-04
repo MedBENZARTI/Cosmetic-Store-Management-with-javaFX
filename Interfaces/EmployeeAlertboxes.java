@@ -255,11 +255,11 @@ class EmployeeAlertboxes {
         clienColumn.setPrefWidth(120);
         clienColumn.setCellValueFactory(new PropertyValueFactory<>("ClientID"));
 
-        TableColumn<Sale, String> produitColumn = new TableColumn<>("Produit ID");
+        TableColumn<Sale, String> produitColumn = new TableColumn<>("Employé ID");
         produitColumn.setPrefWidth(150);
         produitColumn.setCellValueFactory(new PropertyValueFactory<>("ProductID"));
 
-        TableColumn<Sale, String> employeeColumn = new TableColumn<>("Employee ID");
+        TableColumn<Sale, String> employeeColumn = new TableColumn<>("Produit ID");
         employeeColumn.setPrefWidth(150);
         employeeColumn.setCellValueFactory(new PropertyValueFactory<>("EmployeeID"));
 

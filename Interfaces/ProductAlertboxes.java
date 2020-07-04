@@ -274,7 +274,6 @@ class ProductAlertboxes {
         TextField id = new TextField();
         id.setText(SelectedProd.getProductID());
         id.setDisable(true);
-        ;
         GridPane.setConstraints(id, 1, 0);
 
         // sellinprice label

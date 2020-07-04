@@ -30,6 +30,7 @@ public class ProductScene {
         this.border = new BorderPane();
         table = new TableView<>();
         p = new ProductAlertboxes();
+        
         // Top part
         HBox Top = new HBox();
 
